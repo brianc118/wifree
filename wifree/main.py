@@ -7,14 +7,15 @@ app = Flask(__name__)
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
-	# incomingnumber = request.values.get('From', None)
-	body = request.values.get('Body', None)
+    # incomingnumber = request.values.get('From', None)
+    print('received message')
+    body = request.values.get('Body', None)
 
-	resp = MessagingResponse()
-	resp.message(body)
+    resp = MessagingResponse()
+    resp.message(body)
 
-	return str(resp)
+    return str(resp)
 
 
 if __name__ == "__main__":
-	app.run(debug=True)
+    app.run(debug=True)
