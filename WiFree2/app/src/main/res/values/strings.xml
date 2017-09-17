@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">WiFree2</string>
+    <string name="app_name">WiFree</string>
+    <string name="mode_prompt">Choose a mode of transport</string>
+
+    <string-array name="travel_modes">
+        <item>Driving</item>
+        <item>Walking</item>
+        <item>Transit</item>
+    </string-array>
+
 </resources>
