@@ -25,7 +25,7 @@ def parse_body(body):
         raise ValueError
     if lon < -180 or lon > 180:
         raise ValueError
-    mode = arr[0]
+    mode = arr[0].lower()
     if mode != 'walking' and mode != 'driving' and mode != 'transit':
         raise ValueError
     return (mode, str(lat) + ',' + str(lon))
@@ -39,7 +39,7 @@ def sms_reply():
     try:
         mode, coord = parse_body(body)
     except:
-        resp.message('Invalid data')
+        resp.message('Invalid request. Must be in form [travelmode],[latitude],[longitude]. For example: walking,42.3585,-71.0964')
         return str(resp)
 
     wifiloc = None
