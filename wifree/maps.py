@@ -17,7 +17,7 @@ def direction_coordinates(user_location, direction_location, mode):
     steps = directions_result[0]['legs'][0]['steps']
     arr = []
     for step in steps:
-        arr.append(BeautifulSoup(step['html_instructions']).get_text())
+        arr.append(BeautifulSoup(step['html_instructions'].replace('<div', '\n<div'), 'lxml').get_text())
     return arr
 
 def get_time(user_location, direction_location, mode):
