@@ -26,6 +26,9 @@ def get_time(user_location, direction_location, mode):
                                      direction_location,
                                      mode=mode,
                                      departure_time=now)
+    print("Directions_result = " + str(directions_result))
+    if len(directions_result) == 0:
+        return 9999999999999999999
     return sum([sum([step['duration']['value'] for step in leg['steps']]) for leg in directions_result[0]['legs']])
 
 
@@ -44,7 +47,7 @@ def get_coord(result):
 def get_wificoord(location, mode):
     rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location})
     results = [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresults[u'groups'][0][u'items']]
-    results.sort(key=lambda x:x[1], reverse=True)
+    results.sort(key=lambda x:x[1], reverse=False)
     print(results)
     print(type(results))
     return get_coord(results[0][0])  # return shortest
