@@ -3,10 +3,16 @@
 import os
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
 import maps
 import traceback
 
 app = Flask(__name__)
+
+# Twilio
+account_sid = "TWILIO__SID"
+auth_token = "TILIO_TOKEN"
+client = Client(account_sid, auth_token)
 
 def parse_body(body):
     arr = body.split(',')
@@ -37,6 +43,7 @@ def sms_reply():
 
     wifiloc = None
     try:
+        resp.message('Received message, looking for directions...')
         wifiloc = maps.get_wificoord(coord, mode)
         print(wifiloc)
         directions = maps.direction_coordinates(coord, wifiloc[1], mode)
@@ -48,7 +55,12 @@ def sms_reply():
     msg += wifiloc[0]
     for step in directions:
         msg += ('\n' + step)
-    resp.message(msg)
+    try:
+        message = client.api.account.messages.create(to=request.values.get('From', None),
+                                                     from_="+14158531662",
+                                                     body=msg)
+    except:
+        print('Error: couldn\'t send message')
     return str(resp)
 
 if __name__ == "__main__":
