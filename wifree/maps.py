@@ -1,5 +1,5 @@
 import googlemaps
-from datetime import datetime
+import datetime
 import json
 from bs4 import BeautifulSoup
 import foursquare
