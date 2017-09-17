@@ -10,15 +10,18 @@ app = Flask(__name__)
 
 def parse_body(body):
     arr = body.split(',')
-    if len(arr) != 2:
+    if len(arr) != 3:
         raise ValueError
-    lat = float(arr[0])
-    lon = float(arr[1])
+    lat = float(arr[1])
+    lon = float(arr[2])
     if lat < -90 or lat > 90:
         raise ValueError
     if lon < -180 or lon > 180:
         raise ValueError
-    return str(lat) + ',' + str(lon)
+    mode = arr[0]
+    if mode != 'walking' and mode != 'driving' and mode != 'transit':
+        raise ValueError
+    return (mode, str(lat) + ',' + str(lon))
 
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_reply():
@@ -27,16 +30,16 @@ def sms_reply():
     coord = (None, None)
     resp = MessagingResponse()
     try:
-        coord = parse_body(body)
+        mode, coord = parse_body(body)
     except:
         resp.message('Invalid data')
         return str(resp)
 
     wifiloc = None
     try:
-        wifiloc = maps.get_wificoord(coord, 'walking')
+        wifiloc = maps.get_wificoord(coord, mode)
         print(wifiloc)
-        directions = maps.direction_coordinates(coord, wifiloc[1], 'walking')
+        directions = maps.direction_coordinates(coord, wifiloc[1], mode)
     except:
         traceback.print_exc()
         resp.message('Could not obtain directions')
