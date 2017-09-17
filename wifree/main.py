@@ -28,8 +28,8 @@ def sms_reply():
     resp = MessagingResponse()
     try:
         coord = parse_body(body)
-        resp.message('Invalid data')
     except:
+        resp.message('Invalid data')
         return str(resp)
 
     wifiloc = None
