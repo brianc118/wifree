@@ -28,17 +28,18 @@ def sms_reply():
     except:
         return
 
+    wifiloc = None
     try:
         wifiloc = get_wificoord(coord)
         directions = direction_coordinates(coord, wifiloc[1], 'walking')
     except:
         resp.message('Could not obtain directions')
+        return
     msg = ''
     msg += wifiloc[0]
     for step in directions:
         msg += ('\n' + step)
     resp.message(msg)
-    return str(resp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
