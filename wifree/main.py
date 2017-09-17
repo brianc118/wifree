@@ -21,16 +21,24 @@ def sms_reply():
     print('received message')
     body = request.values.get('Body', None)
     coord = (None, None)
+    resp = MessagingResponse()
     try:
         coord = parse_body(body)
+        resp.message('Invalid data')
     except:
         return
 
-    resp = MessagingResponse()
-    resp.message(body)
-
+    try:
+        wifiloc = get_wificoord(coord)
+        directions = direction_coordinates(coord, wifiloc[1], 'walking')
+    except:
+        resp.message('Could not obtain directions')
+    msg = ''
+    msg += wifiloc[0]
+    for step in directions:
+        msg += ('\n' + step)
+    resp.message(msg)
     return str(resp)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
