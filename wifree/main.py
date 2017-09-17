@@ -34,6 +34,7 @@ def sms_reply():
     wifiloc = None
     try:
         wifiloc = maps.get_wificoord(coord)
+        print(wifiloc)
         directions = maps.direction_coordinates(coord, wifiloc[1], 'walking')
     except:
         resp.message('Could not obtain directions')
