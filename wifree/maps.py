@@ -10,7 +10,7 @@ gmaps = googlemaps.Client(key='GMAPS_KEY')
 
 # Request directions via public transit
 def direction_coordinates(user_location, direction_location, mode):
-    now = datetime.now()
+    now = datetime.datetime.now()
     directions_result = gmaps.directions(user_location,
                                      direction_location,
                                      mode=mode,
@@ -23,7 +23,7 @@ def direction_coordinates(user_location, direction_location, mode):
     return (arr, total_time)
 
 def get_time(user_location, direction_location, mode):
-    now = datetime.now()
+    now = datetime.datetime.now()
     directions_result = gmaps.directions(user_location,
                                      direction_location,
                                      mode=mode,

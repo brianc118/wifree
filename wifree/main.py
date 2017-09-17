@@ -4,7 +4,7 @@ import os
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
-from datetime import datetime
+import datetime
 import maps
 import traceback
 
