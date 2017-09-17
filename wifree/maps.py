@@ -52,12 +52,12 @@ def get_wificoord(location, mode):
     # for i in range (math.floor(math.log(rad_min,rad_max))):
         # try:
     radius = 16000
-    rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50, 'radius': radius})
+    rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50})
     results = []
     for rawresultsgroup in rawresults[u'groups']:
         results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
 
-    rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50, 'radius': radius})
+    rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50})
     for rawresultsgroup in rawresults[u'groups']:
         results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
     results.sort(key=lambda x:x[1], reverse=False)
