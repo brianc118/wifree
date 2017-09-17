@@ -45,6 +45,8 @@ def get_wificoord(location, mode):
     rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location})
     results = [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresults[u'groups'][0][u'items']]
     results.sort(key=lambda x:x[1], reverse=True)
-    return get_coord(results[0])  # return shortest
+    print(results)
+    print(type(results))
+    return get_coord(results[0][0])  # return shortest
     
 
