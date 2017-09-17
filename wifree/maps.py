@@ -48,7 +48,7 @@ def get_coord(result):
 
 def get_wificoord(location, mode):
     results = []
-    for i in range (floor(log10(rad_min,rad_max)))
+    for i in range (floor(log10(rad_min,rad_max))):
         try:
             radius = i * rad_min  
             rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50, 'radius', radius})
