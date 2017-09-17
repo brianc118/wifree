@@ -12,12 +12,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.telephony.SmsManager;
 
 import android.app.AlertDialog;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,9 +42,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Button wifi = (Button) findViewById(R.id.button);
+        TextView wifi = (TextView) findViewById(R.id.wifi_Text);
         directions = (Spinner) findViewById(R.id.spinner1);
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
+                R.array.travel_modes, R.layout.spinner_item);
+
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        directions.setAdapter(adapter);
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

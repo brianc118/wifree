@@ -1,25 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.krrishdholakia.wifree2.MainActivity"
     android:background="#FFFFFF">
 
 
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/travel_modes"
-            android:prompt="@string/mode_prompt" />
-
-        <Button
+        <android.support.v7.widget.CardView
             android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WiFi"
-            android:gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_corners">
 
-</LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background2">
+                        <Spinner
+                            android:id="@+id/spinner1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="15sp"
+                            android:layout_marginTop="30sp"
+                            android:entries="@array/travel_modes"
+                            android:prompt="@string/mode_prompt" />
+
+                        <TextView
+                            android:id="@+id/wifi_Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15sp"
+                            android:gravity="center"
+                            android:textColor="#FFFFFF"
+                            android:text="Go To WiFi"
+                            android:textSize="36dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_below="@+id/spinner1" />
+
+
+                </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+</FrameLayout>
