@@ -66,7 +66,7 @@ def get_wificoord(location, mode):
             return get_coord(results[0][0])  # return shortest
         except:
             pass
-    # raise Exception
+    raise Exception
     return ''
     
 
