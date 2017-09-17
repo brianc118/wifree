@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 from bs4 import BeautifulSoup
 import foursquare
+import math
 
 gmaps = googlemaps.Client(key='GMAPS_KEY')
 
