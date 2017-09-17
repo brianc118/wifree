@@ -44,7 +44,9 @@ def sms_reply():
 
     wifiloc = None
     try:
-        resp.message('Received message, looking for directions...')
+        message = client.api.account.messages.create(to=request.values.get('From', None),
+                                                     from_="+14158531662",
+                                                     body='Received message, looking for directions...')
         wifiloc = maps.get_wificoord(coord, mode)
         print(wifiloc)
         directions, travel_time = maps.direction_coordinates(coord, wifiloc[1], mode)
