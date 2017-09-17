@@ -19,14 +19,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background2">
-                        <Spinner
-                            android:id="@+id/spinner1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="15sp"
-                            android:layout_marginTop="30sp"
-                            android:entries="@array/travel_modes"
-                            android:prompt="@string/mode_prompt" />
 
                         <TextView
                             android:id="@+id/wifi_Text"
@@ -43,6 +35,14 @@
 
                 </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
 
+
+        </android.support.v7.widget.CardView>
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button"
+        android:textSize="20dp"
+        />
 </FrameLayout>

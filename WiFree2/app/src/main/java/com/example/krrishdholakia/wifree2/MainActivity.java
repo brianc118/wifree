@@ -2,6 +2,7 @@ package com.example.krrishdholakia.wifree2;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -29,32 +30,33 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static android.R.id.message;
 
 
 public class MainActivity extends AppCompatActivity {
     private GoogleMap gMap;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
-    private Spinner directions;
-    private String co_ordinates = "";
 
+    private String co_ordinates = "";
+    private String messages = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView wifi = (TextView) findViewById(R.id.wifi_Text);
-        directions = (Spinner) findViewById(R.id.spinner1);
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
                 R.array.travel_modes, R.layout.spinner_item);
 
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        directions.setAdapter(adapter);
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //push the geodata to the server and find nearest wifi spot
-                String phoneNumber = "415-853-1662";
+                final String phoneNumber = "415-853-1662";
                 //SmsManager smsManager1 = SmsManager.getDefault();
                 //smsManager1.sendTextMessage("+17708783106", null, "hello", null, null);
                 if (co_ordinates != null) {
@@ -67,19 +69,88 @@ public class MainActivity extends AppCompatActivity {
 
                             System.out.println(" user location");
                             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                            Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            final Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.SEND_SMS}, 1);
                             } else {
                                 LatLng userLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                 co_ordinates = "" + userLocation.latitude + "," + userLocation.longitude;
                                 System.out.println(co_ordinates + " : 123");
-                                //SmsManager smsManager = SmsManager.getDefault();
-                                //smsManager.sendTextMessage("+17708783106", null, "hello", null, null);
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
-                                String message = String.valueOf(directions.getSelectedItem())+ "," + co_ordinates;
-                                intent.putExtra("sms_body", message);
-                                startActivity(intent);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                                final String[] colors = new String[]{
+                                        "driving",
+                                        "walking",
+                                        "transit",
+                                };
+
+                                // Boolean array for initial selected items
+                                final boolean[] checkedColors = new boolean[]{
+                                        false, // Red
+                                        false, // Green
+                                        false
+
+                                };
+
+                                // Convert the color array to list
+                                final List<String> colorsList = Arrays.asList(colors);
+
+                                builder.setMultiChoiceItems(colors, checkedColors, new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                                        // Update the current focused item's checked status
+                                        for(int count = 0; count < checkedColors.length; count++)
+                                        {
+                                            if (count == which) {
+                                                checkedColors[count]=true;
+                                                ((AlertDialog) dialog).getListView().setItemChecked(count, true);
+                                            }
+                                            else {
+                                                checkedColors[count]=false;
+                                                ((AlertDialog) dialog).getListView().setItemChecked(count, false);
+                                            }
+
+                                        }
+                                        checkedColors[which] = isChecked;
+
+                                        // Get the current focused item
+                                        String currentItem = colorsList.get(which);
+
+
+
+                                    }
+                                });
+
+                                // Specify the dialog is not cancelable
+                                builder.setCancelable(false);
+
+                                // Set a title for alert dialog
+                                builder.setTitle("Your preferred mode?");
+
+                                // Set the positive/yes button click listener
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Do something when click positive button
+                                        for (int i = 0; i<checkedColors.length; i++){
+                                            boolean checked = checkedColors[i];
+                                            if (checked) {
+                                                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phoneNumber));
+                                                messages = colors[i] + "," + co_ordinates;
+                                                System.out.println(colors[i] + " do these match? " + messages);
+                                                intent.putExtra("sms_body", messages);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                // Display the alert dialog on interface
+                                dialog.show();
+
+
+
 
                             }
                         }
