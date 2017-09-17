@@ -49,24 +49,24 @@ def get_coord(result):
 
 def get_wificoord(location, mode):
     results = []
-    for i in range (math.floor(math.log(rad_min,rad_max))):
-        try:
-            radius = i * rad_min  
-            rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50, 'radius': radius})
-            results = []
-            for rawresultsgroup in rawresults[u'groups']:
-                results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
+    # for i in range (math.floor(math.log(rad_min,rad_max))):
+        # try:
+    radius = 16000
+    rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50, 'radius': radius})
+    results = []
+    for rawresultsgroup in rawresults[u'groups']:
+        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
 
-            rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50, 'radius': radius})
-            for rawresultsgroup in rawresults[u'groups']:
-                results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
-            results.sort(key=lambda x:x[1], reverse=False)
-            for r, t in results:
-                print(r['name'] + '\t' + str(t))
-            return get_coord(results[0][0])  # return shortest
-        except:
-            pass
-    raise Exception
-    return ''
+    rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50, 'radius': radius})
+    for rawresultsgroup in rawresults[u'groups']:
+        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
+    results.sort(key=lambda x:x[1], reverse=False)
+    for r, t in results:
+        print(r['name'] + '\t' + str(t))
+    return get_coord(results[0][0])  # return shortest
+        # except:
+            # pass
+    # raise Exception
+    # return ''
     
 
