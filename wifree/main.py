@@ -3,6 +3,8 @@
 import os
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
+import 4sq
+import maps
 
 app = Flask(__name__)
 
@@ -32,8 +34,8 @@ def sms_reply():
 
     wifiloc = None
     try:
-        wifiloc = get_wificoord(coord)
-        directions = direction_coordinates(coord, wifiloc[1], 'walking')
+        wifiloc = 4sq.get_wificoord(coord)
+        directions = maps.direction_coordinates(coord, wifiloc[1], 'walking')
     except:
         resp.message('Could not obtain directions')
         return
