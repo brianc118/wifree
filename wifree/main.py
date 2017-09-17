@@ -56,7 +56,7 @@ def sms_reply():
         return str(resp)
     msg = ''
     msg += wifiloc[0] + "\n"
-    msg += 'Time to destination: ' + str(datetime.timedelta(seconds=travel_time))
+    msg += 'Time to destination: ' + str(datetime.timedelta(seconds=travel_time)) + "\n"
     for step in directions:
         msg += ('\n' + step)
     try:
