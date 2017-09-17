@@ -42,8 +42,10 @@ def sms_reply():
     msg = ''
     msg += wifiloc[0]
     for step in directions:
+        print(step)
         msg += ('\n' + step)
     resp.message(msg)
+    print('finished sending msg')
     return str(resp)
 
 if __name__ == "__main__":

@@ -15,5 +15,6 @@ def direction_coordinates(user_location, direction_location, mode):
     steps = directions_result[0]['legs'][0]['steps']
     arr = []
     for step in steps:
+        print(step)
         arr.append(BeautifulSoup(step['html_instructions'], 'lxml').get_text())
     return arr
