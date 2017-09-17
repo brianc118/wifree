@@ -4,6 +4,7 @@ import os
 from flask import Flask, request, redirect
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+from datetime import datetime
 import maps
 import traceback
 
@@ -46,13 +47,14 @@ def sms_reply():
         resp.message('Received message, looking for directions...')
         wifiloc = maps.get_wificoord(coord, mode)
         print(wifiloc)
-        directions = maps.direction_coordinates(coord, wifiloc[1], mode)
+        directions, travel_time = maps.direction_coordinates(coord, wifiloc[1], mode)
     except:
         traceback.print_exc()
         resp.message('Could not obtain directions')
         return str(resp)
     msg = ''
     msg += wifiloc[0]
+    msg += 'time to destination' + str(datetime.timedelta(seconds=travel_time))
     for step in directions:
         msg += ('\n' + step)
     try:
