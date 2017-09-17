@@ -14,11 +14,12 @@ def direction_coordinates(user_location, direction_location, mode):
                                      direction_location,
                                      mode=mode,
                                      departure_time=now)
+    total_time = get_time(user_location, direction_location, mode)
     steps = directions_result[0]['legs'][0]['steps']
     arr = []
     for step in steps:
         arr.append(BeautifulSoup(step['html_instructions'].replace('<div', '\n<div'), 'lxml').get_text())
-    return arr
+    return (arr, total_time)
 
 def get_time(user_location, direction_location, mode):
     now = datetime.now()
@@ -35,7 +36,8 @@ def get_time(user_location, direction_location, mode):
 client = foursquare.Foursquare(client_id='4SQ_ID', client_secret='4SQ_SECRET')
 
 max_travel_time = 120 # in min
-
+rad_min = 2000
+rad_max = 16000
 
 def get_coord(result):
     name = result[u'name']
@@ -45,18 +47,25 @@ def get_coord(result):
     return (name, str(lat) + ',' + str(lng))
 
 def get_wificoord(location, mode):
-    rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50})
     results = []
-    for rawresultsgroup in rawresults[u'groups']:
-        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
+    for i in range (floor(log10(rad_min,rad_max)))
+        try:
+            radius = i * rad_min  
+            rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50, 'radius', radius})
+            results = []
+            for rawresultsgroup in rawresults[u'groups']:
+                results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
 
-    rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50})
-    for rawresultsgroup in rawresults[u'groups']:
-        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
-    
-    results.sort(key=lambda x:x[1], reverse=False)
-    for r, t in results:
-        print(r['name'] + '\t' + str(t))
-    return get_coord(results[0][0])  # return shortest
+            rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50, 'radius', radius})
+            for rawresultsgroup in rawresults[u'groups']:
+                results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
+            results.sort(key=lambda x:x[1], reverse=False)
+            for r, t in results:
+                print(r['name'] + '\t' + str(t))
+            return get_coord(results[0][0])  # return shortest
+        except:
+            pass
+    raise Exception
+    return ''
     
 
