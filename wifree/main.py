@@ -30,7 +30,7 @@ def sms_reply():
         coord = parse_body(body)
         resp.message('Invalid data')
     except:
-        return
+        return str(resp)
 
     wifiloc = None
     try:
@@ -38,12 +38,13 @@ def sms_reply():
         directions = maps.direction_coordinates(coord, wifiloc[1], 'walking')
     except:
         resp.message('Could not obtain directions')
-        return
+        return str(resp)
     msg = ''
     msg += wifiloc[0]
     for step in directions:
         msg += ('\n' + step)
     resp.message(msg)
+    return str(resp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
