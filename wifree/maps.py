@@ -13,30 +13,24 @@ foursqclient = foursquare.Foursquare(client_id=FOURSQUARE_ID, client_secret=FOUR
 gmapsclient = googlemaps.Client(key=GMAPS_KEY)
 
 
-# Request directions via public transit
 def direction_coordinates(user_location, direction_location, mode):
-    now = datetime.datetime.now()
-    directions_result = gmapsclient.directions(user_location,
-                                     direction_location,
-                                     mode=mode,
-                                     departure_time=now)
-    total_time = get_time(user_location, direction_location, mode)
-    steps = directions_result[0]['legs'][0]['steps']
-    arr = []
-    for step in steps:
-        arr.append(BeautifulSoup(step['html_instructions'].replace('<div', '\n<div'), 'lxml').get_text())
-    return (arr, total_time)
-
-def get_time(user_location, direction_location, mode):
+    """ :type user_location: str ('lat,long')
+        :type direction_location: str ('lat,long')
+        :rtype: tuple (List (directions), Int (total time in s))
+    """
     now = datetime.datetime.now()
     directions_result = gmapsclient.directions(user_location,
                                      direction_location,
                                      mode=mode,
                                      departure_time=now)
     if len(directions_result) == 0:
-        return math.inf
-    return sum([sum([step['duration']['value'] for step in leg['steps']]) for leg in directions_result[0]['legs']])
-
+        return ([], math.inf)
+    total_time = sum([sum([step['duration']['value'] for step in leg['steps']]) for leg in directions_result[0]['legs']])
+    steps = directions_result[0]['legs'][0]['steps']
+    arr = []
+    for step in steps:
+        arr.append(BeautifulSoup(step['html_instructions'].replace('<div', '\n<div'), 'lxml').get_text())
+    return (arr, total_time)
 
 def get_coord(result):
     name = result['name']
