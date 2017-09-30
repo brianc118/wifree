@@ -16,7 +16,7 @@ client = Client(TWILIO_SID, TWILIO_TOKEN)
 
 printReceivedMessage = False
 
-def nsfmetric(num, n=1):
+def nsfmetric(num, n=3):
     """n-Significant Figures"""
     numstr = ("{0:.%ie}" % (n-1)).format(num)
     newnum = float(numstr)
@@ -24,15 +24,15 @@ def nsfmetric(num, n=1):
         return str(int(newnum*1000)) + ' m'
     return str((newnum)) + ' km'
 
-def nsfimperial(num, n=1):
+def nsfimperial(num, n=3):
     numstr = ("{0:.%ie}" % (n-1)).format(num)
     newnum = float(numstr)
     if newnum < 1:
-        newnum = 5280 * num
+        num = 5280 * num
         numstr = ("{0:.%ie}" % (n-1)).format(num)
         newnum = float(numstr)
         return str(int(newnum)) + ' ft'
-    return str((newnum)) + 'miles'
+    return str((newnum)) + ' miles'
 
 
 def parse_body(body):
