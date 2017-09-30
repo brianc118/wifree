@@ -16,6 +16,25 @@ client = Client(TWILIO_SID, TWILIO_TOKEN)
 
 printReceivedMessage = False
 
+def nsfmetric(num, n=1):
+    """n-Significant Figures"""
+    numstr = ("{0:.%ie}" % (n-1)).format(num)
+    newnum = float(numstr)
+    if newnum < 1:
+        return str(int(newnum*1000)) + ' m'
+    return str((newnum)) + ' km'
+
+def nsfimperial(num, n=1):
+    numstr = ("{0:.%ie}" % (n-1)).format(num)
+    newnum = float(numstr)
+    if newnum < 1:
+        newnum = 5280 * num
+        numstr = ("{0:.%ie}" % (n-1)).format(num)
+        newnum = float(numstr)
+        return str(int(newnum)) + ' ft'
+    return str((newnum)) + 'miles'
+
+
 def parse_body(body):
     arr = body.split(',')
     if len(arr) != 3:
@@ -56,9 +75,11 @@ def sms_reply():
         traceback.print_exc()
         resp.message('Could not obtain directions')
         return str(resp)
+    readablekm = nsfmetric(travel_dist/1000)
+    readablemiles = nsfimperial(travel_dist/1000*0.621371)
     msg = wifiloc[0] + '\n'
     msg += 'Travel time: ' + str(datetime.timedelta(seconds=travel_time)) + '\n'
-    msg += 'Dist: ' + str(round(travel_dist/1000, -2)) + ' km / ' + str(round(travel_dist/1000*0.621371, -2)) + ' miles )\n'
+    msg += 'Dist: ' + readablekm + ' / ' + readablemiles + '\n'
     for step in directions:
         msg += ('\n' + step)
     try:
