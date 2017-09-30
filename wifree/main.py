@@ -14,6 +14,8 @@ app = Flask(__name__)
 
 client = Client(TWILIO_SID, TWILIO_TOKEN)
 
+printReceivedMessage = False
+
 def parse_body(body):
     arr = body.split(',')
     if len(arr) != 3:
@@ -43,19 +45,20 @@ def sms_reply():
 
     wifiloc = None
     try:
-        message = client.api.account.messages.create(to=request.values.get('From', None),
-                                                     from_="+14158531662",
-                                                     body='Received message, looking for directions...')
+        if printReceivedMessage:
+            message = client.api.account.messages.create(to=request.values.get('From', None),
+                                                         from_="+14158531662",
+                                                         body='Received message, looking for directions...')
         wifiloc = maps.get_bestcoord(coord, mode)
         print(wifiloc)
-        directions, travel_time = maps.direction_coordinates(coord, wifiloc[1], mode)
+        directions, travel_time, travel_dist = maps.direction_coordinates(coord, wifiloc[1], mode)
     except:
         traceback.print_exc()
         resp.message('Could not obtain directions')
         return str(resp)
-    msg = ''
-    msg += wifiloc[0] + "\n"
-    msg += 'Time to destination: ' + str(datetime.timedelta(seconds=travel_time)) + "\n"
+    msg = wifiloc[0] + '\n'
+    msg += 'Time to destination: ' + str(datetime.timedelta(seconds=travel_time))
+    msg += '(' + str(travel_dist) + ')\n'
     for step in directions:
         msg += ('\n' + step)
     try:
