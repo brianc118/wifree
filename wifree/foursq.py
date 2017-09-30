@@ -1,6 +1,8 @@
 import foursquare
 
-client = foursquare.Foursquare(client_id='4SQ_ID', client_secret='4SQ_SECRET')
+from keys import FOURSQUARE_ID, FOURSQUARE_SECRET
+
+client = foursquare.Foursquare(client_id=FOURSQUARE_ID, client_secret=FOURSQUARE_SECRET)
 
 def get_wificoord(location):
     # venue search see https://developer.foursquare.com/docs/venues/search

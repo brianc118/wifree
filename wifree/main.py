@@ -8,12 +8,11 @@ import datetime
 import maps
 import traceback
 
+from keys import TWILIO_SID, TWILIO_TOKEN
+
 app = Flask(__name__)
 
-# Twilio
-account_sid = "TWILIO__SID"
-auth_token = "TILIO_TOKEN"
-client = Client(account_sid, auth_token)
+client = Client(TWILIO_SID, TWILIO_TOKEN)
 
 def parse_body(body):
     arr = body.split(',')

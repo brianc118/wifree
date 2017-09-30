@@ -5,7 +5,9 @@ from bs4 import BeautifulSoup
 import foursquare
 import math
 
-gmaps = googlemaps.Client(key='GMAPS_KEY')
+from keys import FOURSQUARE_ID, FOURSQUARE_SECRET, GMAPS_KEY
+
+gmaps = googlemaps.Client(key=GMAPS_KEY)
 
 
 # Request directions via public transit
@@ -34,7 +36,7 @@ def get_time(user_location, direction_location, mode):
     return sum([sum([step['duration']['value'] for step in leg['steps']]) for leg in directions_result[0]['legs']])
 
 
-client = foursquare.Foursquare(client_id='4SQ_ID', client_secret='4SQ_SECRET')
+client = foursquare.Foursquare(client_id=FOURSQUARE_ID, client_secret=FOURSQUARE_SECRET)
 
 max_travel_time = 120 # in min
 rad_min = 2000
