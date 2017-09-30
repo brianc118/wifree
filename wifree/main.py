@@ -33,7 +33,7 @@ def parse_body(body):
 def sms_reply():
     print('received message')
     body = request.values.get('Body', None)
-    coord = (None, None)
+    coord = ''
     resp = MessagingResponse()
     try:
         mode, coord = parse_body(body)
@@ -46,7 +46,7 @@ def sms_reply():
         message = client.api.account.messages.create(to=request.values.get('From', None),
                                                      from_="+14158531662",
                                                      body='Received message, looking for directions...')
-        wifiloc = maps.get_wificoord(coord, mode)
+        wifiloc = maps.get_bestcoord(coord, mode)
         print(wifiloc)
         directions, travel_time = maps.direction_coordinates(coord, wifiloc[1], mode)
     except:

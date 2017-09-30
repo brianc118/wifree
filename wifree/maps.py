@@ -7,7 +7,10 @@ import math
 
 from keys import FOURSQUARE_ID, FOURSQUARE_SECRET, GMAPS_KEY
 
-gmaps = googlemaps.Client(key=GMAPS_KEY)
+wifiSearchTerms = ['Wifi', 'Free Wifi']
+
+foursqclient = foursquare.Foursquare(client_id=FOURSQUARE_ID, client_secret=FOURSQUARE_SECRET)
+gmapsclient = googlemaps.Client(key=GMAPS_KEY)
 
 
 # Request directions via public transit
@@ -30,45 +33,31 @@ def get_time(user_location, direction_location, mode):
                                      direction_location,
                                      mode=mode,
                                      departure_time=now)
-    # print("Directions_result = " + str(directions_result))
     if len(directions_result) == 0:
-        return 9999999999999999999
+        return math.inf
     return sum([sum([step['duration']['value'] for step in leg['steps']]) for leg in directions_result[0]['legs']])
 
 
-client = foursquare.Foursquare(client_id=FOURSQUARE_ID, client_secret=FOURSQUARE_SECRET)
-
-max_travel_time = 120 # in min
-rad_min = 2000
-rad_max = 16000
-
 def get_coord(result):
-    name = result[u'name']
-    loc = result[u'location']
-    lat = loc[u'lat']
-    lng = loc[u'lng']
+    name = result['name']
+    loc = result['location']
+    lat = loc['lat']
+    lng = loc['lng']
     return (name, str(lat) + ',' + str(lng))
 
-def get_wificoord(location, mode):
+def get_wificoord(location):
     results = []
-    # for i in range (math.floor(math.log(rad_min,rad_max))):
-        # try:
-    radius = 16000
-    rawresults = client.venues.explore(params={'query': 'Wifi', 'll': location, 'limit': 50})
-    results = []
-    for rawresultsgroup in rawresults[u'groups']:
-        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
 
-    rawresults = client.venues.explore(params={'query': 'Free Wifi', 'll': location, 'limit': 50})
-    for rawresultsgroup in rawresults[u'groups']:
-        results += [(item['venue'], get_time(location, get_coord(item['venue'])[1], mode)) for item in rawresultsgroup[u'items']]
-    results.sort(key=lambda x:x[1], reverse=False)
-    for r, t in results:
-        print(r['name'] + '\t' + str(t))
-    return get_coord(results[0][0])  # return shortest
-        # except:
-            # pass
-    # raise Exception
-    # return ''
-    
+    for term in wifiSearchTerms:
+        rawresults = foursqclient.venues.explore(params={'query': term, 'll': location, 'limit': 50})
+        for rawresultsgroup in rawresults['groups']:
+            results += [get_coord(item['venue']) for item in rawresultsgroup['items']]
+    return results
 
+def get_bestcoord(location, mode):
+    dest = get_wificoord(location)
+    destnames = [x[0] for x in dest]
+    destlatlong = [x[1] for x in dest]
+    res = gmapsclient.distance_matrix([location], destlatlong, mode=mode)
+    best_i, best_v = min(enumerate(res['rows'][0]['elements']), key=lambda x : x[1]['duration']['value'])
+    return (destnames[best_i], destlatlong[best_i], best_v['duration']['value'])
