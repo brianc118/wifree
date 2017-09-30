@@ -57,8 +57,8 @@ def sms_reply():
         resp.message('Could not obtain directions')
         return str(resp)
     msg = wifiloc[0] + '\n'
-    msg += 'Time to destination: ' + str(datetime.timedelta(seconds=travel_time))
-    msg += '(' + str(travel_dist/1000) + 'km / ' + str(travel_dist/1000*0.621371) + 'miles )\n'
+    msg += 'Travel time: ' + str(datetime.timedelta(seconds=travel_time)) + '\n'
+    msg += 'Dist: ' + str(round(travel_dist/1000, -2)) + ' km / ' + str(round(travel_dist/1000*0.621371, -2)) + ' miles )\n'
     for step in directions:
         msg += ('\n' + step)
     try:
