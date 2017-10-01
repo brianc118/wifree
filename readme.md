@@ -42,4 +42,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Googlers at HackMIT for giving us free cloud credits :)
+* Googlers for giving us free cloud credits :)
+* HackMIT for the awesome weekend!
