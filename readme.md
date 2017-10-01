@@ -38,7 +38,7 @@ where `[travelmode]` is in {'walking', 'driving', 'transit'}.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.ttxt](LICENSE.txt) file for details
 
 ## Acknowledgments
 
